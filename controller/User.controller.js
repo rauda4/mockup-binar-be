@@ -45,7 +45,7 @@ class UserController {
 
       const user = await prisma.user.findUnique({ where: { kodeunik } });
       if (!user) return res.status(401).json({ msg: 'User not found' });
-      res.status(200).json({ auth: true, status: 'authorized' });
+      res.status(200).json({ auth: user, status: 'authorized' });
     } catch (error) {
       res.send(error.message);
     }

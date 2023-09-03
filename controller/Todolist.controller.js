@@ -71,7 +71,7 @@ class TodoController {
         });
       }
       res.status(200).json({
-        message: `succes find users with id ${user_id}`,
+        message: `succes find todo with user id ${user_id}`,
         data: getTodo,
       });
     } catch (error) {
@@ -93,7 +93,7 @@ class TodoController {
       });
       res.status(200).json({
         result: 'succes',
-        message: `user with id = ${id} updated`,
+        message: `todo with user id = ${id} updated`,
         data: updateData,
       });
     } catch (error) {

@@ -3,10 +3,10 @@ const prisma = new PrismaClient();
 
 class TodoController {
   static async createTodo(req, res) {
-    const { todo, keterangan } = req.body;
+    const { user_id, todo, keterangan } = req.body;
 
     // check if any fields empty
-    if (!todo || !keterangan) {
+    if (!user_id || !todo || !keterangan) {
       return res.status(404).json({
         result: 'Failed',
         message: 'Please add all fields',
@@ -16,6 +16,7 @@ class TodoController {
     try {
       const todos = await prisma.todolist.create({
         data: {
+          user_id,
           todo,
           keterangan,
         },
@@ -52,17 +53,26 @@ class TodoController {
   }
 
   static async GetTodoById(req, res) {
-    const { id } = req.params;
+    const { user_id } = req.params;
+    if (!user_id) {
+      return res
+        .status(200)
+        .json({ message: 'please enter todo list', data: [] });
+    }
     try {
-      const todos = await prisma.todolist.findUnique({ where: { id } });
-      if (!todos) {
+      const getTodo = await prisma.todolist.findMany({
+        where: {
+          user_id,
+        },
+      });
+      if (!getTodo) {
         return res.status(400).json({
           result: 'Todolist not found',
         });
       }
       res.status(200).json({
-        message: `succes find users with id ${id}`,
-        data: todos,
+        message: `succes find users with id ${user_id}`,
+        data: getTodo,
       });
     } catch (error) {
       res.status(500).json({ msg: error.message });
@@ -71,12 +81,14 @@ class TodoController {
 
   static async updateTodo(req, res) {
     try {
-      const { id } = req.params;
-      const { todo } = req.body;
+      const { user_id, id } = req.params;
+      const { todo, keterangan } = req.body;
       const updateData = await prisma.todolist.update({
-        where: { id },
+        where: { user_id, id },
         data: {
+          user_id,
           todo,
+          keterangan,
         },
       });
       res.status(200).json({
@@ -90,10 +102,10 @@ class TodoController {
   }
 
   static async deleteTodo(req, res) {
-    const { id } = req.params;
+    const { user_id, id } = req.params;
     try {
       const todos = await prisma.todolist.delete({
-        where: { id },
+        where: { user_id, id },
       });
       if (!todos) {
         return res.status(400).json({ msg: 'cannot delete' });

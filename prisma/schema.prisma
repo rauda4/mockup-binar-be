@@ -13,3 +13,8 @@ model user {
   email    String
   kodeunik String @unique
 }
+
+model todolist {
+  id       String @id @default(uuid())
+  todo    String
+}

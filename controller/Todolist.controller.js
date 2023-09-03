@@ -3,10 +3,10 @@ const prisma = new PrismaClient();
 
 class TodoController {
   static async createTodo(req, res) {
-    const { todo } = req.body;
+    const { todo, keterangan } = req.body;
 
     // check if any fields empty
-    if (!todo) {
+    if (!todo || !keterangan) {
       return res.status(404).json({
         result: 'Failed',
         message: 'Please add all fields',
@@ -17,6 +17,7 @@ class TodoController {
       const todos = await prisma.todolist.create({
         data: {
           todo,
+          keterangan,
         },
       });
       res.status(200).json({

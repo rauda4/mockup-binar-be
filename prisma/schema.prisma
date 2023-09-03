@@ -15,6 +15,7 @@ model user {
 }
 
 model todolist {
-  id       String @id @default(uuid())
-  todo    String
+  id         String @id @default(uuid())
+  todo       String
+  keterangan String
 }
